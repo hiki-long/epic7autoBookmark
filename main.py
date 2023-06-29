@@ -12,6 +12,7 @@ from numpy import asarray
 import aircv
 import json
 import random
+import debugpy
 
 file = open("config.json", "r", encoding="utf-8")
 config = json.load(file)
@@ -55,6 +56,7 @@ class worker(QtCore.QThread):
         self.stoneNum = stoneNum
 
     def run(self):
+        debugpy.debug_this_thread()
         self.isStart.emit()
 
         print("startMode: ", self.startMode)
@@ -134,7 +136,7 @@ class worker(QtCore.QThread):
 
                         buy_screenshot = asarray(device.screenshot())
                         buyButtonLocation = aircv.find_template(
-                            buy_screenshot, buyButton, 0.9
+                            buy_screenshot, buyButton, 0.5
                         )
 
                         if buyButtonLocation:
@@ -193,7 +195,7 @@ class worker(QtCore.QThread):
 
                         buy_screenshot = asarray(device.screenshot())
                         buyButtonLocation = aircv.find_template(
-                            buy_screenshot, buyButton, 0.9
+                            buy_screenshot, buyButton, 0.5
                         )
 
                         if buyButtonLocation:
@@ -234,8 +236,10 @@ class worker(QtCore.QThread):
                     print("not find mystic!")
 
                 if needRefresh:
+                    # android_screen = device.screenshot()
+                    # android_screen.save('Screen.png')
                     refreshButtonLocation = aircv.find_template(
-                        screenshot, refreshButton, 0.9
+                        screenshot, refreshButton, 0.5
                     )
                     while True:
                         refreshButtonFoundResult: tuple = refreshButtonLocation[
@@ -246,15 +250,15 @@ class worker(QtCore.QThread):
                             refreshButtonFoundResult[0],
                             refreshButtonFoundResult[1],
                         )
-
                         QtCore.QThread.sleep(1)
 
                         confirm_screenshot = asarray(device.screenshot())
                         refreshYesButtonLocation = aircv.find_template(
-                            confirm_screenshot, refreshYesButton, 0.9
+                            confirm_screenshot, refreshYesButton, 0.7
                         )
 
                         if refreshYesButtonLocation:
+                            print("find yes button")
                             refreshYesButtonFoundResult: tuple = (
                                 refreshYesButtonLocation["result"]
                             )
