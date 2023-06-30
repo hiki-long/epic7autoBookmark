@@ -12,7 +12,6 @@ from numpy import asarray
 import aircv
 import json
 import random
-import debugpy
 
 file = open("config.json", "r", encoding="utf-8")
 config = json.load(file)
@@ -56,7 +55,6 @@ class worker(QtCore.QThread):
         self.stoneNum = stoneNum
 
     def run(self):
-        debugpy.debug_this_thread()
         self.isStart.emit()
 
         print("startMode: ", self.startMode)
